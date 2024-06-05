@@ -6,7 +6,13 @@
     <h1 id="title">Smash-a-Mole!!</h1>
     <div>
       <div>
-        <h2>Click <button id="start">start</button> to play!</h2>
+        <h2>Select difficulty 
+          <select name="difficulty" id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="normal">Normal</option>
+            <option value="hard">Hard</option>
+          </select>
+          & click <button id="start">start</button> to play!</h2>
       </div>
       <div>
         <h2>score: <span id="score">0</span></h2>
@@ -43,7 +49,6 @@
       <div id="hole8" class="hole">
         <div id="mole8" class="mole"></div>
       </div>
-      <!--TODO: Add the missing holes and moles. -->
     </div>
     <script src="./src/index.js"></script>
   </body>

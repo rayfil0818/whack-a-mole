@@ -1,15 +1,15 @@
 const holes = document.querySelectorAll('.hole');
 const moles = document.querySelectorAll('.mole');
 const startButton = document.querySelector('#start');
-// TODO: Add the missing query selectors:
 const score = document.querySelector("#score"); // Use querySelector() to get the score element
 const timerDisplay = document.querySelector("#timer"); // use querySelector() to get the timer element.
+const difficultyLevel = document.querySelector("#difficulty");; // use querySelector() to get the difficulty element.
 
 let time = 0;
 let timer;
 let lastHole = 0;
 let points = 0;
-let difficulty = "hard";
+let difficulty = "easy"; // set as default
 
 /**
  * Generates a random integer within a range.
@@ -41,10 +41,13 @@ function randomInteger(min, max) {
  */
 function setDelay(difficulty) {
   if (difficulty === "easy") {
+    console.log("easy");
     return 1500;
   } else if (difficulty === "normal") {
+    console.log("normal");
     return 1000;
   } else {
+    console.log("hard");
     return randomInteger(600, 1200);
   }
 }
@@ -64,12 +67,14 @@ function setDelay(difficulty) {
  * chooseHole(holes) //> returns one of the 9 holes that you defined
  */
 function chooseHole(holes) {
-  let hole = randomInteger(0, 8);
+  console.log("chooseHole");
+  const index = randomInteger(0, 8);
+  const hole = holes[index];
   if (hole === lastHole) {
-    chooseHole(holes);
+    return chooseHole(holes);
   } else {
     lastHole = hole;
-    return holes[hole];
+    return hole;
   }
 }
 
@@ -94,11 +99,12 @@ function chooseHole(holes) {
 *
 */
 function gameOver() {
+  console.log("gameOver");
   if (time > 0) {
-    timeoutId = showUp();
+    let timeoutId = showUp();
     return timeoutId;
   } else {
-    gameStopped = stopGame();
+    let gameStopped = stopGame();
     return gameStopped;
   }
 
@@ -114,6 +120,7 @@ function gameOver() {
 *
 */
 function showUp() {
+  console.log("showUp");
   let delay = setDelay(difficulty);
   const hole = chooseHole(holes);
   return showAndHide(hole, delay);
@@ -128,15 +135,12 @@ function showUp() {
 *
 */
 function showAndHide(hole, delay){
-  // TODO: call the toggleVisibility function so that it adds the 'show' class.
+  console.log("showAndHide");
   toggleVisibility(hole);
-  
   const timeoutID = setTimeout(() => {
-    // TODO: call the toggleVisibility function so that it removes the 'show' class when the timer times out.
     toggleVisibility(hole);
-    
     gameOver();
-  }, delay); // TODO: change the setTimeout delay to the one provided as a parameter
+  }, delay);
   return timeoutID;
 }
 
@@ -147,9 +151,7 @@ function showAndHide(hole, delay){
 *
 */
 function toggleVisibility(hole){
-  // TODO: add hole.classList.toggle so that it adds or removes the 'show' class.
-  hole.classList.toggle("show");
-  
+  hole.classList.toggle('show');
   return hole;
 }
 
@@ -164,9 +166,9 @@ function toggleVisibility(hole){
 *
 */
 function updateScore() {
-  points++;
-  score.textContent = points;
-
+  points = points + 1;
+  score.innerHTML = points;
+  // score.textContent = points;
   return points;
 }
 
@@ -178,7 +180,6 @@ function updateScore() {
 *
 */
 function clearScore() {
-  // TODO: Write your code here
   points = 0;
   score.textContent = points;
   return points;
@@ -190,10 +191,12 @@ function clearScore() {
 *
 */
 function updateTimer() {
+  console.log("updateTimer");
   // Countdown the time until it runs out to 0.
   if (time > 0){
     time -= 1;
     timerDisplay.textContent = time;
+    console.log("updateTimer: " + timerDisplay);
   }  
   return time;
 }
@@ -205,6 +208,7 @@ function updateTimer() {
 *
 */
 function startTimer() {
+  console.log("startTimer");
   timer = setInterval(updateTimer, 1000);
   return timer;
 }
@@ -229,7 +233,8 @@ function whack(event) {
 * for an example on how to set event listeners using a for loop.
 */
 function setEventListeners(){
-  // Add listner for each of the moles
+  console.log("setEventListeners");
+  // Add listener for each of the moles
   moles.forEach(mole => mole.addEventListener("click", whack));
   return moles;
 }
@@ -241,6 +246,7 @@ function setEventListeners(){
 *
 */
 function setDuration(duration) {
+  console.log("setDuration");
   time = duration;
   return time;
 }
@@ -252,7 +258,8 @@ function setDuration(duration) {
 *
 */
 function stopGame(){
-  stopAudio(song);  //optional
+  console.log("stopGame");
+  // stopAudio(song);  //optional
   clearInterval(timer);
   return "game stopped";
 }
@@ -264,12 +271,25 @@ function stopGame(){
 *
 */
 function startGame(){
-  setDuration(10);
+  clearScore();
+  setDuration(15);
+  startTimer();
+  setEventListeners();
   showUp();
   return "game started";
 }
 
+/**
+ * Handles changes of diffuclty level from the drop down menu
+ * @param {*} event 
+ */
+function handleSelectChange(event) {
+  difficulty = event.target.value;
+  console.log("difficulty: " + difficulty);
+}
+
 startButton.addEventListener("click", startGame);
+difficultyLevel.addEventListener("change", handleSelectChange);
 
 
 // Please do not modify the code below.
